@@ -7,16 +7,10 @@ import { UsersModule } from './users/users.module';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
-const username = process.env.USERNAME;
-const password = process.env.PASSWORD;
+const db_connection = process.env.DB_CONNECTION;
 
 @Module({
-  imports: [
-    UsersModule,
-    MongooseModule.forRoot(
-      `mongodb+srv://${username}:${password}@projectycluster0.r1yi37s.mongodb.net/?retryWrites=true&w=majority`,
-    ),
-  ],
+  imports: [UsersModule, MongooseModule.forRoot(`${db_connection}`)],
   controllers: [AppController],
   providers: [AppService],
 })

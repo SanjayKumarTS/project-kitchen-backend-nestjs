@@ -1,34 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserRequestDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { Model } from 'mongoose';
+import { User } from './entities/user.entity';
+import { UserRepository } from './repository/users.repository';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
   private users = [];
 
-  constructor(
-    @InjectModel('Users') private readonly usersModel: Model<CreateUserDto>,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
-  async create(createUserDto: CreateUserDto) {
-    const newUser = new this.usersModel({
-      uuid: uuidv4(),
-      ...createUserDto,
-    });
-    const result = await newUser.save();
-    return result;
+  async create(createUserDto: CreateUserRequestDto): Promise<User> {
+    return this.userRepository.create(plainToInstance(User, createUserDto));
   }
 
-  async findAll() {
-    const users = await this.usersModel.find();
-    return users as CreateUserDto[];
+  async findAll(): Promise<Array<User>> {
+    return this.userRepository.findAll();
   }
 
-  async findOne(id: string) {
-    const user = await this.usersModel.findOne({ uuid: id });
+  async findOne(id: string): Promise<User> {
+    const user = this.userRepository.findOne(id);
     if (!user) {
       throw new Error('User Not Found!');
     }
@@ -37,16 +32,11 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    const result = await this.usersModel.findOneAndUpdate(
-      { uuid: id },
-      updateUserDto,
-    );
-    const user = await this.findOne(id);
-    return user;
+    return this.userRepository.update(id, updateUserDto);
   }
 
   async remove(id: string) {
-    const userRemoved = await this.usersModel.findOneAndDelete({ uuid: id });
+    const userRemoved = this.userRepository.remove(id);
     if (!userRemoved) {
       throw new Error('User Not Found!');
     }
