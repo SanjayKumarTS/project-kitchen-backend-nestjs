@@ -1,0 +1,182 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Project-Kitchen-Backend-Nextjs",
+    "dateExported": "2023-07-23T03:14:56.676Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "1255620b-c101-4b3c-b4e5-2a08749ac796",
+            "name": "Users",
+            "containerId": "",
+            "created": "2023-07-21T14:13:18.462Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "371d294a-d895-4a63-b5c7-c155babf9eb5",
+            "name": "Recipe",
+            "containerId": "",
+            "created": "2023-07-21T14:17:02.310Z",
+            "sortNum": 20000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "ef616e97-91b8-4e1a-a460-693a56c5c515",
+            "colId": "534939f1-ab68-4367-be5c-00c6af174976",
+            "containerId": "1255620b-c101-4b3c-b4e5-2a08749ac796",
+            "name": "Get All Users",
+            "url": "localhost:3000/users",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-07-21T14:10:32.631Z",
+            "modified": "2023-07-21T14:10:45.660Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "d48ffcbf-8984-4a4f-a3d7-ba9246192f9c",
+            "colId": "534939f1-ab68-4367-be5c-00c6af174976",
+            "containerId": "1255620b-c101-4b3c-b4e5-2a08749ac796",
+            "name": "Add New User",
+            "url": "localhost:3000/users",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2023-07-21T14:11:12.482Z",
+            "modified": "2023-07-21T15:04:09.032Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Shathin\",\n  \"email\": \"Shathin@gmail.com\",\n  \"photoURL\": \"some/url.png\",\n  \"tags\": []\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "9d0a3de4-e88b-4d2b-be86-c834a60f1972",
+            "colId": "534939f1-ab68-4367-be5c-00c6af174976",
+            "containerId": "1255620b-c101-4b3c-b4e5-2a08749ac796",
+            "name": "Get User by UUID",
+            "url": "localhost:3000/users/c845b7f1-e1b3-42f4-b409-462b758b171a",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2023-07-21T14:13:59.565Z",
+            "modified": "2023-07-21T15:04:30.362Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "2ba2c627-2340-47fd-abf4-5679f7f39950",
+            "colId": "534939f1-ab68-4367-be5c-00c6af174976",
+            "containerId": "1255620b-c101-4b3c-b4e5-2a08749ac796",
+            "name": "Update User by UUID",
+            "url": "localhost:3000/users/c845b7f1-e1b3-42f4-b409-462b758b171a",
+            "method": "PATCH",
+            "sortNum": 40000,
+            "created": "2023-07-21T14:14:48.834Z",
+            "modified": "2023-07-21T15:04:57.321Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Shathin\",\n  \"email\": \"Shathin@gmail.com\",\n  \"photoURL\": \"some/url.png\",\n  \"tags\": []\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "659010fd-292f-443b-b16f-8fd3da42af4b",
+            "colId": "534939f1-ab68-4367-be5c-00c6af174976",
+            "containerId": "1255620b-c101-4b3c-b4e5-2a08749ac796",
+            "name": "Delete User by UUID",
+            "url": "localhost:3000/users/c845b7f1-e1b3-42f4-b409-462b758b171a",
+            "method": "DELETE",
+            "sortNum": 50000,
+            "created": "2023-07-21T14:15:29.561Z",
+            "modified": "2023-07-21T15:05:26.213Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "1f938577-934e-4cf4-bb9d-bef555fc1232",
+            "colId": "534939f1-ab68-4367-be5c-00c6af174976",
+            "containerId": "371d294a-d895-4a63-b5c7-c155babf9eb5",
+            "name": "Get all Recipes",
+            "url": "localhost:3000/recipe",
+            "method": "GET",
+            "sortNum": 60000,
+            "created": "2023-07-21T14:17:43.705Z",
+            "modified": "2023-07-21T15:14:11.399Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "a601e7f9-3aff-4570-9a03-76f2b0aea005",
+            "colId": "534939f1-ab68-4367-be5c-00c6af174976",
+            "containerId": "371d294a-d895-4a63-b5c7-c155babf9eb5",
+            "name": "Add new Recipe",
+            "url": "localhost:3000/Recipe",
+            "method": "POST",
+            "sortNum": 70000,
+            "created": "2023-07-21T14:18:07.280Z",
+            "modified": "2023-07-23T02:09:51.101Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"authorId\": \"f2ee7be5-c454-4f7e-967f-6acb5ef0bf8c\",\n  \"name\": \"Masala Dosa 1\",\n  \"ingredients\": {\n    \"name\": \"Rice\",\n    \"amount\": \"500\",\n    \"unit\": \"gms\",\n    \"note\": \"\"\n  },\n  \"instructions\": [\"Prepare Batter\",\"Make Dosa\"],\n  \"nutrition\": {\n    \"calories\": \"300\",\n    \"protein\": \"5g\"\n  },\n  \"photo\": \"photo/url\",\n  \"tags\": []\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "8423935c-c7a2-4187-9f76-6bbe940e7d29",
+            "colId": "534939f1-ab68-4367-be5c-00c6af174976",
+            "containerId": "371d294a-d895-4a63-b5c7-c155babf9eb5",
+            "name": "Get all Recipes by Name",
+            "url": "localhost:3000/recipe?name=paneer&page=1",
+            "method": "GET",
+            "sortNum": 80000,
+            "created": "2023-07-21T15:16:35.973Z",
+            "modified": "2023-07-23T03:04:30.456Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "name",
+                    "value": "paneer",
+                    "isPath": false
+                },
+                {
+                    "name": "page",
+                    "value": "1",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "7e536fc7-9a4e-446d-8a5e-d3952218e7fc",
+            "colId": "534939f1-ab68-4367-be5c-00c6af174976",
+            "containerId": "371d294a-d895-4a63-b5c7-c155babf9eb5",
+            "name": "Get Recipe by ID",
+            "url": "localhost:3000/recipe?id=64ba9e22992f108cd665d44f",
+            "method": "GET",
+            "sortNum": 90000,
+            "created": "2023-07-23T02:54:38.109Z",
+            "modified": "2023-07-23T03:02:51.573Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "64ba9e22992f108cd665d44f",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        }
+    ]
+}
