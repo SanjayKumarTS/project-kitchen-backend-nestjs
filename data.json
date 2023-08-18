@@ -1,0 +1,44 @@
+[
+  {
+    "authorId": "f2ee7be5-c454-4f7e-967f-6acb5ef0bf8c",
+    "name": "Instant Idli Recipe | No Urad Dal Rice Flour Idli in 10 Mins",
+    "preparationTime": 5,
+    "cookTime": 10,
+    "ingredients": [
+      { "quantity": "1½", "unit": "cup", "name": "rice flour" },
+      { "quantity": "½", "unit": "cup", "name": "rava / semolina / suji" },
+      { "quantity": "½", "unit": "tsp", "name": "salt" },
+      { "quantity": "1", "unit": "cup", "name": "curd" },
+      { "quantity": "1", "unit": "cup", "name": "water" },
+      { "quantity": "½", "unit": "tsp", "name": "eno fruit salt" }
+    ],
+    "instructions": [
+      "firstly, in a large bowl take 1½ cup rice flour, ½ cup rava and ½ tsp salt.",
+      "add 1 cup curd and 1 cup water.",
+      "mix well making sure there are no lumps. add water as required to form a smooth batter.",
+      "cover and rest for 10 minutes.",
+      "after 10 minutes, the batter has absorbed well.",
+      "now add ½ tsp eno fruit salt and mix gently forming a frothy batter.",
+      "pour the idli batter into greased idli plate and keep in steamer.",
+      "steam for 10 minutes or until idli are cooked well.",
+      "finally, enjoy Rice Flour Idli Recipe with spicy chutney."
+    ],
+    "nutritions": [
+      { "label": "Calories: ", "value": "69", "unit": "kcal" },
+      { "label": "Carbohydrates: ", "value": "13", "unit": "g" },
+      { "label": "Protein: ", "value": "2", "unit": "g" },
+      { "label": "Fat: ", "value": "1", "unit": "g" },
+      { "label": "Saturated Fat: ", "value": "0.1", "unit": "g" },
+      { "label": "Polyunsaturated Fat: ", "value": "0.4", "unit": "g" },
+      { "label": "Monounsaturated Fat: ", "value": "0.2", "unit": "g" },
+      { "label": "Sodium: ", "value": "59", "unit": "mg" },
+      { "label": "Potassium: ", "value": "17", "unit": "mg" },
+      { "label": "Fiber: ", "value": "1", "unit": "g" },
+      { "label": "Sugar: ", "value": "0.1", "unit": "g" },
+      { "label": "Calcium: ", "value": "18", "unit": "mg" },
+      { "label": "Iron: ", "value": "0.4", "unit": "mg" }
+    ],
+    "photo": "photo/url",
+    "tags": []
+  }
+]

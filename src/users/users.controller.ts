@@ -9,6 +9,7 @@ import {
   NotFoundException,
   UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
@@ -16,6 +17,8 @@ import {
   CreateUserResponseDTO,
 } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { EmailAuthGuard } from 'src/email-auth/email-auth.guard';
 
 @Controller('users')
 @UsePipes(new ValidationPipe({ whitelist: true }))
@@ -30,6 +33,7 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(EmailAuthGuard)
   findAll() {
     return this.usersService.findAll();
   }

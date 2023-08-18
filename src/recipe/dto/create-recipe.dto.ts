@@ -10,7 +10,11 @@ export class CreateRecipeDto {
   @IsArray()
   @IsString({ each: true })
   instructions: Array<string>;
-  nutrition: NutritionDto;
+  nutrition: Array<NutritionDto>;
+  @IsNumber()
+  preparationTime: number;
+  @IsNumber()
+  cookTime: number;
   @IsString()
   photo: string;
   tags: Array<string>;
@@ -20,7 +24,7 @@ export class IngredientsDto {
   @IsString()
   name: string;
   @IsNumber()
-  amount: string;
+  quantity: string;
   @IsString()
   unit: string;
   @IsString()
@@ -29,7 +33,9 @@ export class IngredientsDto {
 
 export class NutritionDto {
   @IsString()
-  calories: string;
+  label: string;
   @IsString()
-  protein: string;
+  value: string;
+  @IsString()
+  unit: string;
 }
