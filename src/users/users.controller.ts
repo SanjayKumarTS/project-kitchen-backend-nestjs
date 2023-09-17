@@ -33,7 +33,7 @@ export class UsersController {
   }
 
   @Get()
-  @UseGuards(EmailAuthGuard)
+  // @UseGuards(EmailAuthGuard)
   findAll() {
     return this.usersService.findAll();
   }
