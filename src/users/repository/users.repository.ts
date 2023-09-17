@@ -27,4 +27,8 @@ export class UserRepository {
   async remove(id: string) {
     return await this.usersModel.findOneAndDelete({ uuid: id });
   }
+
+  async findByEmail(email: string): Promise<User> {
+    return await this.usersModel.findOne({ email: email });
+  }
 }

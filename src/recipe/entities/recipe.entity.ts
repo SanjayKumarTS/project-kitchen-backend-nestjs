@@ -9,7 +9,7 @@ export class Ingredients {
   name: string;
   @Prop({ required: true })
   @IsString()
-  amount: string;
+  quantity: string;
   @Prop({ required: true })
   @IsString()
   unit: string;
@@ -22,10 +22,13 @@ export class Ingredients {
 export class Nutrition {
   @Prop({ required: true })
   @IsString()
-  calories: string;
-  @Prop()
+  label: string;
+  @Prop({ required: true })
   @IsString()
-  protein: string;
+  value: string;
+  @Prop({ required: true })
+  @IsString()
+  unit: string;
 }
 
 @Schema({ timestamps: true, versionKey: false })
@@ -44,8 +47,15 @@ export class Recipe {
   @ValidateNested()
   @Type(() => String)
   instructions: Array<string>;
-  @Prop({ required: true, type: Nutrition })
-  nutrition: Nutrition;
+  @Prop({ required: true })
+  @IsArray()
+  @ValidateNested()
+  @Type(() => Nutrition)
+  nutrition: Array<Nutrition>;
+  @Prop({ required: true })
+  preparationTime: number;
+  @Prop({ required: true })
+  cookTime: number;
   @Prop({ required: true })
   @IsString()
   photo: string;
