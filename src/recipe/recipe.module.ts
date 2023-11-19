@@ -13,5 +13,6 @@ import { UsersModule } from 'src/users/users.module';
   ],
   controllers: [RecipeController],
   providers: [RecipeService, RecipeRepository],
+  exports: [RecipeRepository],
 })
 export class RecipeModule {}

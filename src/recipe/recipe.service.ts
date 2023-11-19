@@ -5,6 +5,7 @@ import { RecipeRepository } from './repository/recipe.repository';
 import { Recipe } from './entities/recipe.entity';
 import { UsersService } from 'src/users/users.service';
 import { FindRecipeDTO } from './dto/find-recipe.dto';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class RecipeService {
@@ -17,7 +18,29 @@ export class RecipeService {
     if (!author) {
       throw new Error('Author Not found');
     }
+
     return await this.recipeRepository.create(createRecipeDto);
+  }
+
+  async createMany(createRecipeDtos: CreateRecipeDto[]): Promise<Recipe[]> {
+    let createdRecipes: Recipe[] = [];
+
+    for (const createRecipeDto of createRecipeDtos) {
+      try {
+        let author = await this.usersService.findOne(createRecipeDto.authorId);
+        if (!author) {
+          throw new Error('Author Not found');
+        }
+
+        const createdRecipe = await this.recipeRepository.create(
+          createRecipeDto,
+        );
+        createdRecipes.push(plainToInstance(Recipe, createdRecipe));
+      } catch (error) {
+        console.error(`Error processing recipe: ${error.message}`);
+      }
+    }
+    return createdRecipes;
   }
 
   async findRecipe(findRecipeDTO: FindRecipeDTO) {

@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserRequestDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { v4 as uuidv4 } from 'uuid';
-import { Model } from 'mongoose';
 import { User } from './entities/user.entity';
 import { UserRepository } from './repository/users.repository';
 import { plainToInstance } from 'class-transformer';

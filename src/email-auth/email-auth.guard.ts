@@ -4,7 +4,8 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-// import { Cache } from 'cache-manager';
+import * as cacheManager from 'cache-manager';
+import * as memoryStore from 'cache-manager-memory-store';
 import { OAuth2Client } from 'google-auth-library';
 
 import { UsersService } from 'src/users/users.service';
@@ -16,11 +17,15 @@ export class EmailAuthGuard implements CanActivate {
     clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
   };
   private readonly googleOAuthClient: OAuth2Client;
+  // cacheManager: any;
   constructor(
-    private readonly usersService: UsersService,
-  ) // private readonly cacheManager: Cache, // Inject cache manager
-  {
+    private readonly usersService: UsersService, // private readonly cacheManager: Cache, // Inject cache manager
+  ) {
     this.googleOAuthClient = new OAuth2Client(this.googleOAuthConfig);
+    // this.cacheManager = cacheManager.caching('memory', {
+    //   max: 100,
+    //   ttl: 60 * 1000,
+    // });
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -35,6 +40,7 @@ export class EmailAuthGuard implements CanActivate {
     // const userEmail = decodedToken.email;
 
     // Check if the email is cached, if not, fetch from the database
+    // const decodedToken =
     // let userExists: any = await this.cacheManager.get(userEmail);
     // if (userExists === undefined) {
     //   userExists = await this.usersService.findByEmail(userEmail);

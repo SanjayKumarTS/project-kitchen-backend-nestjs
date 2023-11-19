@@ -15,6 +15,11 @@ export class RecipeRepository {
     return await this.recipeModel.create(createRecipeDto);
   }
 
+  async exists(id: string): Promise<Boolean> {
+    const result = this.recipeModel.exists({ uuid: id });
+    return result ? true : false;
+  }
+
   async findRecipe(findRecipeDTO: FindRecipeDTO) {
     const pageNumber: number = +findRecipeDTO.page || 1;
     const totalResultsPerPage = 10;

@@ -8,6 +8,11 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 export class UserRepository {
   constructor(@InjectModel('Users') private readonly usersModel: Model<User>) {}
 
+  async exists(id: string): Promise<Boolean> {
+    const result = this.usersModel.exists({ uuid: id });
+    return result ? true : false;
+  }
+
   async create(data: User): Promise<User> {
     return await this.usersModel.create(data);
   }

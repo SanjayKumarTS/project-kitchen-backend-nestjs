@@ -24,4 +24,6 @@ export class GetUserResponseDTO {
   @IsArray()
   @IsString({ each: true })
   favorites: string[];
+  @IsString()
+  bio: string;
 }

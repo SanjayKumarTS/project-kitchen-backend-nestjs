@@ -10,6 +10,6 @@ import { EmailAuthGuard } from 'src/email-auth/email-auth.guard';
   imports: [MongooseModule.forFeature([{ name: 'Users', schema: UserSchema }])],
   controllers: [UsersController],
   providers: [UserRepository, UsersService, EmailAuthGuard],
-  exports: [UsersService],
+  exports: [UsersService, UserRepository],
 })
 export class UsersModule {}

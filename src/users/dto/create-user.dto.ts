@@ -15,6 +15,8 @@ export class CreateUserRequestDto {
   @IsArray()
   @IsString({ each: true })
   favorites: string[];
+  @IsString()
+  bio: string;
 }
 
 export class CreateUserResponseDTO {
@@ -30,4 +32,6 @@ export class CreateUserResponseDTO {
   @IsArray()
   @IsString({ each: true })
   favorites: string[];
+  @IsString()
+  bio: string;
 }
