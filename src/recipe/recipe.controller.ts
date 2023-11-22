@@ -15,6 +15,7 @@ import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { Recipe } from './entities/recipe.entity';
 import { FindRecipeDTO } from './dto/find-recipe.dto';
 import { EmailAuthGuard } from 'src/email-auth/email-auth.guard';
+import { FindRecipesForUserDTO } from './dto/recipesForUserDTO';
 
 @Controller('recipe')
 export class RecipeController {
@@ -42,5 +43,10 @@ export class RecipeController {
   // @UseGuards(EmailAuthGuard)
   remove(@Param('id') id: string) {
     return this.recipeService.remove(+id);
+  }
+
+  @Get('findRecipesForUser')
+  async findRecipesForUser(@Query() recipesForUserDTO: FindRecipesForUserDTO) {
+    return await this.recipeService.findRecipesForUser(recipesForUserDTO);
   }
 }

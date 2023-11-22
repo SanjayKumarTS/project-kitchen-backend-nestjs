@@ -20,6 +20,10 @@ export class RecipeRepository {
     return result ? true : false;
   }
 
+  async findRandomRecipes(count: number): Promise<Recipe[]> {
+    return this.recipeModel.aggregate([{ $sample: { size: count } }]);
+  }
+
   async findRecipe(findRecipeDTO: FindRecipeDTO) {
     const pageNumber: number = +findRecipeDTO.page || 1;
     const totalResultsPerPage = 10;
@@ -27,8 +31,8 @@ export class RecipeRepository {
     const skip = (pageNumber - 1) * totalResultsPerPage;
     const query: any = {};
 
-    if (findRecipeDTO.id) {
-      query._id = findRecipeDTO.id;
+    if (findRecipeDTO.uuid) {
+      query.uuid = findRecipeDTO.uuid;
     }
 
     if (findRecipeDTO.authorId) {

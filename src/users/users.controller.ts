@@ -10,6 +10,7 @@ import {
   UsePipes,
   ValidationPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
@@ -19,6 +20,7 @@ import {
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { EmailAuthGuard } from 'src/email-auth/email-auth.guard';
+import { FindUserDTO } from './dto/get-user.dto';
 
 @Controller('users')
 @UsePipes(new ValidationPipe({ whitelist: true }))
@@ -34,18 +36,27 @@ export class UsersController {
 
   @Get()
   // @UseGuards(EmailAuthGuard)
-  findAll() {
-    return this.usersService.findAll();
+  async findUser(@Query() findUserDTO: FindUserDTO) {
+    return await this.usersService.findUser(findUserDTO);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    try {
-      return this.usersService.findOne(id);
-    } catch (err) {
-      throw new NotFoundException();
-    }
+  @Post('googleSignIn')
+  async checkAndAddUser(@Body() auth: { idToken: string }) {
+    return await this.usersService.checkAndAddUser(auth);
   }
+
+  async userExists(@Query() findUserDTO: FindUserDTO) {
+    return await this.usersService.userExists(findUserDTO);
+  }
+
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   try {
+  //     return this.usersService.findOne(id);
+  //   } catch (err) {
+  //     throw new NotFoundException();
+  //   }
+  // }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {

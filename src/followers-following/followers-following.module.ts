@@ -15,5 +15,6 @@ import { FollowersFollowingSchema } from './entities/followers-following.entity'
   ],
   controllers: [FollowersFollowingController],
   providers: [FollowersFollowingService, FollowersFollowingRepository],
+  exports: [FollowersFollowingService],
 })
 export class FollowersFollowingModule {}

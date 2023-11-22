@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { LikeCommentService } from './like-comment.service';
 import { LikeCommentController } from './like-comment.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -14,9 +14,10 @@ import { UserRepository } from 'src/users/repository/users.repository';
       { name: 'LikeComment', schema: LikeCommentSchema },
     ]),
     UsersModule,
-    RecipeModule,
+    forwardRef(() => RecipeModule),
   ],
   controllers: [LikeCommentController],
   providers: [LikeCommentService, LikeCommentRepository],
+  exports: [LikeCommentService],
 })
 export class LikeCommentModule {}

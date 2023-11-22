@@ -6,12 +6,18 @@ import { Recipe } from './entities/recipe.entity';
 import { UsersService } from 'src/users/users.service';
 import { FindRecipeDTO } from './dto/find-recipe.dto';
 import { plainToInstance } from 'class-transformer';
+import { FindRecipesForUserDTO } from './dto/recipesForUserDTO';
+import { FollowersFollowingService } from 'src/followers-following/followers-following.service';
+import { LikeCommentService } from 'src/like-comment/like-comment.service';
+import { ResponseFindRecipesForUserDTO } from './dto/ResponseFindRecipesForUserDTO';
 
 @Injectable()
 export class RecipeService {
   constructor(
     private readonly recipeRepository: RecipeRepository,
     private readonly usersService: UsersService,
+    private readonly followersFollowingService: FollowersFollowingService,
+    private readonly likeCommentService: LikeCommentService,
   ) {}
   async create(createRecipeDto: CreateRecipeDto) {
     let author = await this.usersService.findOne(createRecipeDto.authorId);
@@ -20,6 +26,56 @@ export class RecipeService {
     }
 
     return await this.recipeRepository.create(createRecipeDto);
+  }
+
+  async findRecipesForUser(recipesForUserDTO: FindRecipesForUserDTO) {
+    const followedUsers = await this.followersFollowingService.getFollowing(
+      recipesForUserDTO.uuid,
+    );
+    let allRecipes: ResponseFindRecipesForUserDTO[] = [];
+    for (const user of followedUsers) {
+      const recipes = await this.recipeRepository.findRecipe({
+        authorId: user.followingId,
+        name: null,
+        uuid: null,
+        page: null,
+      });
+      for (const recipe of recipes.recipes) {
+        const likesCount = await this.likeCommentService.getLikeCount(
+          recipe.uuid,
+        );
+        const commentsCount = await this.likeCommentService.getCommentsCount(
+          recipe.uuid,
+        );
+        const authorInfo = await this.usersService.findOne(user.followingId);
+
+        const recipeResponse: ResponseFindRecipesForUserDTO = {
+          uuid: recipe.uuid,
+          author: {
+            uuid: authorInfo.uuid,
+            name: authorInfo.name,
+            photo: authorInfo.photoURL,
+          },
+          recipe: {
+            name: recipe.name,
+            description: recipe.description,
+            photo: recipe.photo,
+            creationTime: recipe.createdAt.toString(),
+          },
+          likesCount,
+          commentsCount,
+        };
+        allRecipes.push(recipeResponse);
+      }
+    }
+
+    allRecipes.sort((a, b) => {
+      const creationTimeA = new Date(a.recipe.creationTime).getTime();
+      const creationTimeB = new Date(b.recipe.creationTime).getTime();
+      return creationTimeB - creationTimeA;
+    });
+
+    return allRecipes;
   }
 
   async createMany(createRecipeDtos: CreateRecipeDto[]): Promise<Recipe[]> {

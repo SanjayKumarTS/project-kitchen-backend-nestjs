@@ -54,6 +54,10 @@ export class Recipe {
   photo: string;
   @Prop({ type: [String] })
   tags: Array<string>;
+  @Prop({ type: Date })
+  createdAt?: Date;
+  @Prop({ type: Date })
+  updatedAt?: Date;
 }
 
 export type RecipeDocument = Recipe & Document;

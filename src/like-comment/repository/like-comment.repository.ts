@@ -12,8 +12,13 @@ export class LikeCommentRepository {
     private readonly likeCommentModel: Model<LikeComment>,
   ) {}
 
-  async getLikeCount(recipeId: string): Promise<Number> {
-    return await this.likeCommentModel.count({ recipeId: recipeId });
+  async getLikeCount(recipeId: string): Promise<number> {
+    return this.likeCommentModel.countDocuments({ recipeId });
+  }
+
+  async getCommentsCount(recipeId: string): Promise<number> {
+    const document = await this.likeCommentModel.findOne({ recipeId });
+    return document ? document.comments.length : 0;
   }
 
   async getComments(recipeId: string): Promise<LikeComment> {

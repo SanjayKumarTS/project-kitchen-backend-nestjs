@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { IsArray, IsString, isString } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidateIf,
+  isString,
+} from 'class-validator';
 
 export class GetUserRequestDTO {
   @IsString()
@@ -26,4 +33,19 @@ export class GetUserResponseDTO {
   favorites: string[];
   @IsString()
   bio: string;
+}
+
+export class FindUserDTO {
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  uuid?: string;
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  name?: string;
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  email?: string;
 }

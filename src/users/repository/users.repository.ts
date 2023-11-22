@@ -3,10 +3,44 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../entities/user.entity';
 import { Model } from 'mongoose';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { FindUserDTO } from '../dto/get-user.dto';
 
 @Injectable()
 export class UserRepository {
   constructor(@InjectModel('Users') private readonly usersModel: Model<User>) {}
+
+  async findUser(findUserDTO: FindUserDTO) {
+    const query: any = {};
+    if (findUserDTO.uuid) {
+      query.uuid = findUserDTO.uuid;
+    }
+
+    if (findUserDTO.email) {
+      query.email = findUserDTO.email;
+    }
+
+    if (findUserDTO.name) {
+      query.name = new RegExp(findUserDTO.name, 'i');
+    }
+    return this.usersModel.findOne(query).lean();
+  }
+
+  async userExists(findUserDTO: FindUserDTO) {
+    const query: any = {};
+    if (findUserDTO.uuid) {
+      query.uuid = findUserDTO.uuid;
+    }
+
+    if (findUserDTO.email) {
+      query.authorId = findUserDTO.email;
+    }
+
+    if (findUserDTO.name) {
+      query.name = new RegExp(findUserDTO.name, 'i');
+    }
+    const result = await this.usersModel.exists(query).exec();
+    return result ? true : false;
+  }
 
   async exists(id: string): Promise<Boolean> {
     const result = this.usersModel.exists({ uuid: id });

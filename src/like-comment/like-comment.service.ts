@@ -24,6 +24,14 @@ export class LikeCommentService {
     return this.likeCommentRepository.getLikeCount(recipeId);
   }
 
+  async getCommentsCount(recipeId: string) {
+    const recipeExists = await this.recipeRepository.exists(recipeId);
+    if (!recipeExists) {
+      throw new NotFoundException(`Recipe with ID ${recipeId} not found`);
+    }
+    return this.likeCommentRepository.getCommentsCount(recipeId);
+  }
+
   async getComments(recipeId: string) {
     const recipeExists = await this.recipeRepository.exists(recipeId);
     if (!recipeExists) {
