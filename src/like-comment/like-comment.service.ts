@@ -24,6 +24,45 @@ export class LikeCommentService {
     return this.likeCommentRepository.getLikeCount(recipeId);
   }
 
+  async getLike(recipeId: string) {
+    const recipeExists = await this.recipeRepository.exists(recipeId);
+    if (!recipeExists) {
+      throw new NotFoundException(`Recipe with ID ${recipeId} not found`);
+    }
+    return this.likeCommentRepository.getLike(recipeId);
+  }
+
+  async getCommentsWithUserInfo(recipeId: string) {
+    const recipeExists = await this.recipeRepository.exists(recipeId);
+    if (!recipeExists) {
+      throw new NotFoundException(`Recipe with ID ${recipeId} not found`);
+    }
+
+    const likeComment = await this.likeCommentRepository.getComments(recipeId);
+
+    if (!likeComment || likeComment.length === 0) {
+      return [];
+    }
+
+    // Map over each comment to fetch user details
+    const commentsWithUserInfo = await Promise.all(
+      likeComment.map(async (comment) => {
+        const user = await this.userRepository.findOne(comment.user);
+        return {
+          comment: comment.comment,
+          userInfo: {
+            name: user.name,
+            photo: user.photoURL,
+            uuid: user.uuid,
+            bio: user.bio,
+          },
+        };
+      }),
+    );
+
+    return commentsWithUserInfo;
+  }
+
   async getCommentsCount(recipeId: string) {
     const recipeExists = await this.recipeRepository.exists(recipeId);
     if (!recipeExists) {

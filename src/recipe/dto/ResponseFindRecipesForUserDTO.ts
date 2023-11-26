@@ -4,6 +4,7 @@ export class ResponseFindRecipesForUserDTO {
   recipe: Recipe;
   likesCount: Number;
   commentsCount: Number;
+  userLiked: boolean;
 }
 
 export class Author {

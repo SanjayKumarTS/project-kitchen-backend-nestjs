@@ -25,6 +25,22 @@ export class UserRepository {
     return this.usersModel.findOne(query).lean();
   }
 
+  async findManyUsers(findUserDTO: FindUserDTO) {
+    const query: any = {};
+    if (findUserDTO.uuid) {
+      query.uuid = findUserDTO.uuid;
+    }
+
+    if (findUserDTO.email) {
+      query.email = findUserDTO.email;
+    }
+
+    if (findUserDTO.name) {
+      query.name = new RegExp(findUserDTO.name, 'i');
+    }
+    return this.usersModel.find(query).lean();
+  }
+
   async userExists(findUserDTO: FindUserDTO) {
     const query: any = {};
     if (findUserDTO.uuid) {

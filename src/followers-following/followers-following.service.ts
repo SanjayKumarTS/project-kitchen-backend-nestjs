@@ -8,6 +8,49 @@ export class FollowersFollowingService {
     private readonly userRepository: UserRepository,
     private readonly followersFollowingRepository: FollowersFollowingRepository,
   ) {}
+
+  async getFollowersAndFollowing(uuid: string) {
+    const userExists = await this.userRepository.exists(uuid);
+    if (!userExists) {
+      throw new NotFoundException(`User with ID ${uuid} not found`);
+    }
+
+    const followersDocs = await this.followersFollowingRepository.getFollowers(
+      uuid,
+    );
+    const followingDocs = await this.followersFollowingRepository.getFollowing(
+      uuid,
+    );
+
+    const followers = await Promise.all(
+      followersDocs.map(async (doc) => {
+        const user = await this.userRepository.findOne(doc.followerId);
+        return {
+          name: user.name,
+          photo: user.photoURL,
+          uuid: user.uuid,
+          bio: user.bio,
+        };
+      }),
+    );
+    const following = await Promise.all(
+      followingDocs.map(async (doc) => {
+        const user = await this.userRepository.findOne(doc.followingId);
+        return {
+          name: user.name,
+          photo: user.photoURL,
+          uuid: user.uuid,
+          bio: user.bio,
+        };
+      }),
+    );
+
+    return {
+      followers: followers,
+      following: following,
+    };
+  }
+
   async getFollowers(userId: string) {
     if (!(await this.userRepository.exists(userId))) {
       throw new NotFoundException(`User with ID ${userId} not found`);

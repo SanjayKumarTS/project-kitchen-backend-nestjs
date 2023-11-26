@@ -11,6 +11,7 @@ import {
 import { LikeCommentService } from './like-comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { CreateLikeDto } from './dto/create-like.dto';
+import { error } from 'console';
 
 @Controller('like-comment')
 export class LikeCommentController {
@@ -29,6 +30,15 @@ export class LikeCommentController {
   async getComments(@Param('recipeId') recipeId: string) {
     try {
       return await this.likeCommentService.getComments(recipeId);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
+
+  @Get('comments/:recipeId')
+  async getCommentsWithUserInfo(@Param('recipeId') recipeId: string) {
+    try {
+      return await this.likeCommentService.getCommentsWithUserInfo(recipeId);
     } catch (error) {
       throw new NotFoundException(error.message);
     }

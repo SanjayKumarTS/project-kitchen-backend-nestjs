@@ -39,6 +39,11 @@ export class RecipeController {
     return await this.recipeService.findRecipe(findRecipeDTO);
   }
 
+  @Get('findRecipesOfUser')
+  async findRecipesOfUser(@Query() findRecipeDTO: FindRecipeDTO) {
+    return await this.recipeService.findRecipesOfUser(findRecipeDTO);
+  }
+
   @Delete(':id')
   // @UseGuards(EmailAuthGuard)
   remove(@Param('id') id: string) {

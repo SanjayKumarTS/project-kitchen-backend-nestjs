@@ -38,14 +38,11 @@ export class GetUserResponseDTO {
 export class FindUserDTO {
   @IsString()
   @IsOptional()
-  @IsNotEmpty()
   uuid?: string;
   @IsString()
   @IsOptional()
-  @IsNotEmpty()
   name?: string;
   @IsString()
   @IsOptional()
-  @IsNotEmpty()
   email?: string;
 }

@@ -40,6 +40,11 @@ export class UsersController {
     return await this.usersService.findUser(findUserDTO);
   }
 
+  @Get('search')
+  async findUserByName(@Query() findUserDTO: FindUserDTO) {
+    return await this.usersService.findUsers(findUserDTO);
+  }
+
   @Post('googleSignIn')
   async checkAndAddUser(@Body() auth: { idToken: string }) {
     return await this.usersService.checkAndAddUser(auth);

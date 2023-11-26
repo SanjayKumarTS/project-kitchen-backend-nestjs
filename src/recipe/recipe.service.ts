@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { RecipeRepository } from './repository/recipe.repository';
@@ -28,11 +28,69 @@ export class RecipeService {
     return await this.recipeRepository.create(createRecipeDto);
   }
 
+  async findRecipesOfUser(
+    recipesOfUserDTO: FindRecipeDTO,
+  ): Promise<ResponseFindRecipesForUserDTO[]> {
+    const authorInfo = await this.usersService.findOne(
+      recipesOfUserDTO.authorId,
+    );
+    if (!authorInfo) {
+      throw new NotFoundException(
+        `User with UUID ${recipesOfUserDTO.uuid} not found`,
+      );
+    }
+    const recipes = await this.recipeRepository.findRecipe({
+      authorId: recipesOfUserDTO.authorId,
+      name: null,
+      uuid: null,
+      page: null,
+    });
+    const allRecipes: ResponseFindRecipesForUserDTO[] = await Promise.all(
+      recipes.recipes.map(async (recipe) => {
+        const likesCount = await this.likeCommentService.getLikeCount(
+          recipe.uuid,
+        );
+        const commentsCount = await this.likeCommentService.getCommentsCount(
+          recipe.uuid,
+        );
+
+        const likeComment = await this.likeCommentService.getLike(recipe.uuid);
+
+        var userLiked = likeComment?.likes.includes(recipesOfUserDTO.authorId);
+
+        if (userLiked === undefined) {
+          userLiked = false;
+        }
+
+        return {
+          uuid: recipe.uuid,
+          author: {
+            uuid: authorInfo.uuid,
+            name: authorInfo.name,
+            photo: authorInfo.photoURL,
+          },
+          recipe: {
+            name: recipe.name,
+            description: recipe.description,
+            photo: recipe.photo,
+            creationTime: recipe.createdAt.toString(),
+          },
+          likesCount,
+          commentsCount,
+          userLiked: userLiked,
+        };
+      }),
+    );
+
+    return allRecipes;
+  }
+
   async findRecipesForUser(recipesForUserDTO: FindRecipesForUserDTO) {
     const followedUsers = await this.followersFollowingService.getFollowing(
       recipesForUserDTO.uuid,
     );
     let allRecipes: ResponseFindRecipesForUserDTO[] = [];
+
     for (const user of followedUsers) {
       const recipes = await this.recipeRepository.findRecipe({
         authorId: user.followingId,
@@ -49,6 +107,14 @@ export class RecipeService {
         );
         const authorInfo = await this.usersService.findOne(user.followingId);
 
+        const likeComment = await this.likeCommentService.getLike(recipe.uuid);
+
+        var userLiked = likeComment?.likes.includes(recipesForUserDTO.uuid);
+
+        if (userLiked === undefined) {
+          userLiked = false;
+        }
+
         const recipeResponse: ResponseFindRecipesForUserDTO = {
           uuid: recipe.uuid,
           author: {
@@ -64,8 +130,43 @@ export class RecipeService {
           },
           likesCount,
           commentsCount,
+          userLiked: userLiked,
         };
         allRecipes.push(recipeResponse);
+      }
+    }
+
+    if (allRecipes.length === 0) {
+      const randomRecipes = await this.recipeRepository.findRandomRecipes(10);
+      for (const recipe of randomRecipes) {
+        const authorInfo = await this.usersService.findOne(recipe.authorId);
+        const likeComment = await this.likeCommentService.getLike(recipe.uuid);
+
+        var userLiked = likeComment?.likes.includes(recipesForUserDTO.uuid);
+
+        if (userLiked === undefined) {
+          userLiked = false;
+        }
+
+        allRecipes.push({
+          uuid: recipe.uuid,
+          author: {
+            uuid: authorInfo.uuid,
+            name: authorInfo.name,
+            photo: authorInfo.photoURL,
+          },
+          recipe: {
+            name: recipe.name,
+            description: recipe.description,
+            photo: recipe.photo,
+            creationTime: recipe.createdAt.toString(),
+          },
+          likesCount: await this.likeCommentService.getLikeCount(recipe.uuid),
+          commentsCount: await this.likeCommentService.getCommentsCount(
+            recipe.uuid,
+          ),
+          userLiked: userLiked,
+        });
       }
     }
 

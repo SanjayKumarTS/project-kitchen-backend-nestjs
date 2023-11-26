@@ -15,7 +15,7 @@ export class User {
   tags: Array<string>;
   @Prop({ type: [String] })
   favorites: Array<string>;
-  @Prop({ type: String })
+  @Prop({ type: String, default: () => '' })
   bio: string;
 }
 

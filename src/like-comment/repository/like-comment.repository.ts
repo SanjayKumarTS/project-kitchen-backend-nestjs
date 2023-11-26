@@ -16,13 +16,24 @@ export class LikeCommentRepository {
     return this.likeCommentModel.countDocuments({ recipeId });
   }
 
+  async getLike(recipeId: string) {
+    return this.likeCommentModel.findOne({ recipeId });
+  }
+
   async getCommentsCount(recipeId: string): Promise<number> {
     const document = await this.likeCommentModel.findOne({ recipeId });
     return document ? document.comments.length : 0;
   }
 
-  async getComments(recipeId: string): Promise<LikeComment> {
-    return await this.likeCommentModel.findOne({ recipeId: recipeId });
+  async getComments(recipeId: string): Promise<Array<Comment>> {
+    const likeCommentDocument = await this.likeCommentModel.findOne({
+      recipeId,
+    });
+    if (likeCommentDocument && likeCommentDocument.comments) {
+      return likeCommentDocument.comments;
+    } else {
+      return [];
+    }
   }
 
   async createLike(data: CreateLikeDto): Promise<LikeComment> {

@@ -8,6 +8,7 @@ import { plainToInstance } from 'class-transformer';
 import { FindUserDTO } from './dto/get-user.dto';
 import { OAuth2Client } from 'google-auth-library';
 import { CreateCommentDto } from 'src/like-comment/dto/create-comment.dto';
+import { author } from './dto/author.dto';
 
 @Injectable()
 export class UsersService {
@@ -52,6 +53,22 @@ export class UsersService {
       // Handle error (e.g., token is invalid)
       throw new UnauthorizedException('Invalid token');
     }
+  }
+
+  async findUsers(findUserDTO: FindUserDTO) {
+    const users = await this.userRepository.findManyUsers(findUserDTO);
+    let authors: author[] = [];
+    if (users) {
+      authors = users.map((user) => {
+        return {
+          name: user.name,
+          photo: user.photoURL,
+          uuid: user.uuid,
+          bio: user.bio,
+        };
+      });
+    }
+    return authors;
   }
 
   async findUser(findUserDTO: FindUserDTO) {

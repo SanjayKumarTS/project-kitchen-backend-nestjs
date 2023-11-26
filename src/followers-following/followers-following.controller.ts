@@ -6,6 +6,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Body,
 } from '@nestjs/common';
 import { FollowersFollowingService } from './followers-following.service';
 
@@ -23,6 +24,11 @@ export class FollowersFollowingController {
   @Get('following/:userId')
   async getFollowing(@Param('userId') userId: string) {
     return this.followersFollowingService.getFollowing(userId);
+  }
+
+  @Get('followersAndFollowing/:uuid')
+  async getFollowersAndFollowing(@Param('uuid') uuid: string) {
+    return this.followersFollowingService.getFollowersAndFollowing(uuid);
   }
 
   @Post(':userId/follow/:targetUserId')
