@@ -54,4 +54,9 @@ export class RecipeController {
   async findRecipesForUser(@Query() recipesForUserDTO: FindRecipesForUserDTO) {
     return await this.recipeService.findRecipesForUser(recipesForUserDTO);
   }
+
+  @Get('searchRecipe/:name')
+  async searchRecipe(@Param('name') name: string) {
+    return await this.recipeService.searchRecipe(name);
+  }
 }

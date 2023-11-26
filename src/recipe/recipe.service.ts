@@ -200,6 +200,57 @@ export class RecipeService {
     return createdRecipes;
   }
 
+  async searchRecipe(name: string) {
+    const findRecipeDTO: FindRecipeDTO = {
+      authorId: null,
+      name: name,
+      page: null,
+      uuid: null,
+    };
+    const recipes = (await this.recipeRepository.findRecipe(findRecipeDTO))
+      .recipes;
+
+    if (!recipes || recipes.length === 0) {
+      return [];
+    }
+
+    const allRecipes: ResponseFindRecipesForUserDTO[] = await Promise.all(
+      recipes.map(async (recipe) => {
+        // Assume getLikeCount and getCommentsCount methods are available in likeCommentService
+        const likesCount = await this.likeCommentService.getLikeCount(
+          recipe.uuid,
+        );
+        const commentsCount = await this.likeCommentService.getCommentsCount(
+          recipe.uuid,
+        );
+
+        // Fetch the author information for each recipe
+        const authorInfo = await this.usersService.findOne(recipe.authorId);
+
+        // Construct the response DTO
+        return {
+          uuid: recipe.uuid,
+          author: {
+            uuid: authorInfo.uuid,
+            name: authorInfo.name,
+            photo: authorInfo.photoURL,
+          },
+          recipe: {
+            name: recipe.name,
+            description: recipe.description,
+            photo: recipe.photo,
+            creationTime: recipe.createdAt.toString(),
+          },
+          likesCount,
+          commentsCount,
+          userLiked: false,
+        };
+      }),
+    );
+
+    return allRecipes;
+  }
+
   async findRecipe(findRecipeDTO: FindRecipeDTO) {
     return await this.recipeRepository.findRecipe(findRecipeDTO);
   }
