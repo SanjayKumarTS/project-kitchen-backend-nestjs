@@ -66,12 +66,23 @@ export class FollowersFollowingService {
   }
 
   async follow(followerId: string, followingId: string) {
+    // Check if both users exist
     const followerExists = await this.userRepository.exists(followerId);
     const followingExists = await this.userRepository.exists(followingId);
 
     if (!followerExists || !followingExists) {
       throw new NotFoundException('One or both users not found');
     }
+
+    // Check if already following
+    const alreadyFollowing =
+      await this.followersFollowingRepository.isFollowing(
+        followerId,
+        followingId,
+      );
+    if (alreadyFollowing) {
+    }
+
     return this.followersFollowingRepository.follow(followerId, followingId);
   }
 

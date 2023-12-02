@@ -90,6 +90,7 @@ export class RecipeService {
       recipesForUserDTO.uuid,
     );
     let allRecipes: ResponseFindRecipesForUserDTO[] = [];
+    let addedRecipeUUIDs = new Set();
 
     for (const user of followedUsers) {
       const recipes = await this.recipeRepository.findRecipe({
@@ -99,74 +100,87 @@ export class RecipeService {
         page: null,
       });
       for (const recipe of recipes.recipes) {
-        const likesCount = await this.likeCommentService.getLikeCount(
-          recipe.uuid,
-        );
-        const commentsCount = await this.likeCommentService.getCommentsCount(
-          recipe.uuid,
-        );
-        const authorInfo = await this.usersService.findOne(user.followingId);
+        if (!addedRecipeUUIDs.has(recipe.uuid)) {
+          addedRecipeUUIDs.add(recipe.uuid);
+          const likesCount = await this.likeCommentService.getLikeCount(
+            recipe.uuid,
+          );
+          const commentsCount = await this.likeCommentService.getCommentsCount(
+            recipe.uuid,
+          );
+          const authorInfo = await this.usersService.findOne(user.followingId);
 
-        const likeComment = await this.likeCommentService.getLike(recipe.uuid);
+          const likeComment = await this.likeCommentService.getLike(
+            recipe.uuid,
+          );
 
-        var userLiked = likeComment?.likes.includes(recipesForUserDTO.uuid);
+          var userLiked = likeComment?.likes.includes(recipesForUserDTO.uuid);
 
-        if (userLiked === undefined) {
-          userLiked = false;
+          if (userLiked === undefined) {
+            userLiked = false;
+          }
+
+          const recipeResponse: ResponseFindRecipesForUserDTO = {
+            uuid: recipe.uuid,
+            author: {
+              uuid: authorInfo.uuid,
+              name: authorInfo.name,
+              photo: authorInfo.photoURL,
+            },
+            recipe: {
+              name: recipe.name,
+              description: recipe.description,
+              photo: recipe.photo,
+              creationTime: recipe.createdAt.toString(),
+            },
+            likesCount,
+            commentsCount,
+            userLiked: userLiked,
+          };
+          allRecipes.push(recipeResponse);
         }
-
-        const recipeResponse: ResponseFindRecipesForUserDTO = {
-          uuid: recipe.uuid,
-          author: {
-            uuid: authorInfo.uuid,
-            name: authorInfo.name,
-            photo: authorInfo.photoURL,
-          },
-          recipe: {
-            name: recipe.name,
-            description: recipe.description,
-            photo: recipe.photo,
-            creationTime: recipe.createdAt.toString(),
-          },
-          likesCount,
-          commentsCount,
-          userLiked: userLiked,
-        };
-        allRecipes.push(recipeResponse);
       }
     }
 
     if (allRecipes.length === 0) {
-      const randomRecipes = await this.recipeRepository.findRandomRecipes(10);
+      const randomRecipes = await this.recipeRepository.findRandomRecipes(
+        10,
+        recipesForUserDTO.uuid,
+      );
       for (const recipe of randomRecipes) {
-        const authorInfo = await this.usersService.findOne(recipe.authorId);
-        const likeComment = await this.likeCommentService.getLike(recipe.uuid);
-
-        var userLiked = likeComment?.likes.includes(recipesForUserDTO.uuid);
-
-        if (userLiked === undefined) {
-          userLiked = false;
-        }
-
-        allRecipes.push({
-          uuid: recipe.uuid,
-          author: {
-            uuid: authorInfo.uuid,
-            name: authorInfo.name,
-            photo: authorInfo.photoURL,
-          },
-          recipe: {
-            name: recipe.name,
-            description: recipe.description,
-            photo: recipe.photo,
-            creationTime: recipe.createdAt.toString(),
-          },
-          likesCount: await this.likeCommentService.getLikeCount(recipe.uuid),
-          commentsCount: await this.likeCommentService.getCommentsCount(
+        if (!addedRecipeUUIDs.has(recipe.uuid)) {
+          addedRecipeUUIDs.add(recipe.uuid);
+          const authorInfo = await this.usersService.findOne(recipe.authorId);
+          const likeComment = await this.likeCommentService.getLike(
             recipe.uuid,
-          ),
-          userLiked: userLiked,
-        });
+          );
+
+          var userLiked = likeComment?.likes.includes(recipesForUserDTO.uuid);
+
+          if (userLiked === undefined) {
+            userLiked = false;
+          }
+
+          allRecipes.push({
+            uuid: recipe.uuid,
+            author: {
+              uuid: authorInfo.uuid,
+              name: authorInfo.name,
+              photo: authorInfo.photoURL,
+            },
+            recipe: {
+              name: recipe.name,
+              description: recipe.description,
+              photo: recipe.photo,
+              creationTime: recipe.createdAt.toString(),
+            },
+            likesCount: await this.likeCommentService.getLikeCount(recipe.uuid),
+            commentsCount: await this.likeCommentService.getCommentsCount(
+              recipe.uuid,
+            ),
+            userLiked: userLiked,
+          });
+        }
       }
     }
 
@@ -198,6 +212,50 @@ export class RecipeService {
       }
     }
     return createdRecipes;
+  }
+
+  async searchRecipeByCategory(category: string) {
+    const recipes = await this.recipeRepository.findRecipeByCategory(category);
+
+    if (!recipes || recipes.length === 0) {
+      return [];
+    }
+
+    const allRecipes: ResponseFindRecipesForUserDTO[] = await Promise.all(
+      recipes.map(async (recipe) => {
+        // Assume getLikeCount and getCommentsCount methods are available in likeCommentService
+        const likesCount = await this.likeCommentService.getLikeCount(
+          recipe.uuid,
+        );
+        const commentsCount = await this.likeCommentService.getCommentsCount(
+          recipe.uuid,
+        );
+
+        // Fetch the author information for each recipe
+        const authorInfo = await this.usersService.findOne(recipe.authorId);
+
+        // Construct the response DTO
+        return {
+          uuid: recipe.uuid,
+          author: {
+            uuid: authorInfo.uuid,
+            name: authorInfo.name,
+            photo: authorInfo.photoURL,
+          },
+          recipe: {
+            name: recipe.name,
+            description: recipe.description,
+            photo: recipe.photo,
+            creationTime: recipe.createdAt.toString(),
+          },
+          likesCount,
+          commentsCount,
+          userLiked: false,
+        };
+      }),
+    );
+
+    return allRecipes;
   }
 
   async searchRecipe(name: string) {

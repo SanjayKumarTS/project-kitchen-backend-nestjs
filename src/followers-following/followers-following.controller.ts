@@ -39,7 +39,7 @@ export class FollowersFollowingController {
     return this.followersFollowingService.follow(followerId, followingId);
   }
 
-  @Delete(':userId/unfollow/:targetUserId')
+  @Post(':userId/unfollow/:targetUserId')
   @HttpCode(HttpStatus.NO_CONTENT)
   async unfollow(
     @Param('userId') followerId: string,

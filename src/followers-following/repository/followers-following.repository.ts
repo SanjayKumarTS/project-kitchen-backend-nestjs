@@ -10,6 +10,16 @@ export class FollowersFollowingRepository {
     private readonly followersFollowingModel: Model<FollowersFollowing>,
   ) {}
 
+  // In FollowersFollowingRepository
+
+  async isFollowing(followerId: string, followingId: string): Promise<boolean> {
+    const count = await this.followersFollowingModel.countDocuments({
+      followerId,
+      followingId,
+    });
+    return count > 0;
+  }
+
   async getFollowers(userId: string) {
     return await this.followersFollowingModel.find({ followingId: userId });
   }

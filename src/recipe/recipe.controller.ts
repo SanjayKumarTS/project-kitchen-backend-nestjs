@@ -59,4 +59,9 @@ export class RecipeController {
   async searchRecipe(@Param('name') name: string) {
     return await this.recipeService.searchRecipe(name);
   }
+
+  @Get('searchRecipeByCategory/:category')
+  async searchRecipeByCategory(@Param('category') category: string) {
+    return await this.recipeService.searchRecipeByCategory(category);
+  }
 }

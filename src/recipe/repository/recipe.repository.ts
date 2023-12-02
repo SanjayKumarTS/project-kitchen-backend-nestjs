@@ -20,8 +20,22 @@ export class RecipeRepository {
     return result ? true : false;
   }
 
-  async findRandomRecipes(count: number): Promise<Recipe[]> {
-    return this.recipeModel.aggregate([{ $sample: { size: count } }]);
+  async findRandomRecipes(
+    count: number,
+    excludeAuthorId: string,
+  ): Promise<Recipe[]> {
+    return this.recipeModel.aggregate([
+      { $match: { authorId: { $ne: excludeAuthorId } } },
+      { $sample: { size: count } },
+    ]);
+  }
+
+  async findRecipeByCategory(category: string) {
+    const recipes = await this.recipeModel.find({
+      tags: new RegExp(category, 'i'),
+    });
+
+    return recipes;
   }
 
   async findRecipe(findRecipeDTO: FindRecipeDTO) {
