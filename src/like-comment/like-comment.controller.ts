@@ -70,4 +70,22 @@ export class LikeCommentController {
       throw new NotFoundException(error.message);
     }
   }
+
+  @Get('liked/:recipeId')
+  async getLikes(@Param('recipeId') recipeId: string) {
+    try {
+      return await this.likeCommentService.getLike(recipeId);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
+
+  @Get('likes')
+  async getAllLikes() {
+    try {
+      return await this.likeCommentService.getAllLikes();
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
 }

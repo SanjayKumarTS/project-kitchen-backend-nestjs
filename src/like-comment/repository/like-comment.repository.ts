@@ -71,4 +71,13 @@ export class LikeCommentRepository {
     console.log('Update result:', result);
     return result;
   }
+
+  async getAllLikes() {
+    try {
+      const allLikes = await this.likeCommentModel.find({});
+      return allLikes;
+    } catch (error) {
+      throw new Error('Error fetching all likes: ' + error.message);
+    }
+  }
 }

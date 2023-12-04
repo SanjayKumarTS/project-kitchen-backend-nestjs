@@ -18,4 +18,5 @@ export class Recipe {
   description: string;
   photo: string;
   creationTime: string;
+  tags: string[];
 }

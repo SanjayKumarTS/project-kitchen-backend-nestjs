@@ -120,4 +120,7 @@ export class LikeCommentService {
 
     return this.likeCommentRepository.createComment(data);
   }
+  async getAllLikes() {
+    return this.likeCommentRepository.getAllLikes();
+  }
 }
