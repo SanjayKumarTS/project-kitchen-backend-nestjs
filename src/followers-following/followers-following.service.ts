@@ -80,10 +80,11 @@ export class FollowersFollowingService {
         followerId,
         followingId,
       );
-    if (alreadyFollowing) {
+    if (!alreadyFollowing) {
+      return this.followersFollowingRepository.follow(followerId, followingId);
+    } else {
+      throw new NotFoundException('Already following');
     }
-
-    return this.followersFollowingRepository.follow(followerId, followingId);
   }
 
   async unfollow(followerId: string, followingId: string) {
