@@ -47,7 +47,7 @@ export class RecipeController {
   @Delete(':id')
   // @UseGuards(EmailAuthGuard)
   remove(@Param('id') id: string) {
-    return this.recipeService.remove(+id);
+    return this.recipeService.remove(id);
   }
 
   @Get('findRecipesForUser')

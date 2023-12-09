@@ -8,7 +8,6 @@ import { UsersModule } from './users/users.module';
 import { RecipeModule } from './recipe/recipe.module';
 import { LikeCommentModule } from './like-comment/like-comment.module';
 import { FollowersFollowingModule } from './followers-following/followers-following.module';
-import { GenerativeAiModule } from './generative-ai/generative-ai.module';
 
 import * as dotenv from 'dotenv';
 
@@ -22,7 +21,6 @@ mongoose.set('debug', true);
     MongooseModule.forRoot(`${db_connection}`),
     LikeCommentModule,
     FollowersFollowingModule,
-    GenerativeAiModule,
   ],
   controllers: [AppController],
   providers: [AppService],

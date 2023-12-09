@@ -93,6 +93,44 @@ export class RecipeService {
     let allRecipes: ResponseFindRecipesForUserDTO[] = [];
     let addedRecipeUUIDs = new Set();
 
+    const mostRecentRecipe = await this.recipeRepository.findMostRecentRecipe();
+    if (mostRecentRecipe) {
+      addedRecipeUUIDs.add(mostRecentRecipe.uuid);
+      const likesCount = await this.likeCommentService.getLikeCount(
+        mostRecentRecipe.uuid,
+      );
+      const commentsCount = await this.likeCommentService.getCommentsCount(
+        mostRecentRecipe.uuid,
+      );
+      const authorInfo = await this.usersService.findOne(
+        mostRecentRecipe.authorId,
+      );
+      const likeComment = await this.likeCommentService.getLike(
+        mostRecentRecipe.uuid,
+      );
+      var userLiked = likeComment?.likes.includes(recipesForUserDTO.uuid);
+      if (userLiked === undefined) {
+        userLiked = false;
+      }
+      allRecipes.push({
+        uuid: mostRecentRecipe.uuid,
+        author: {
+          uuid: authorInfo.uuid,
+          name: authorInfo.name,
+          photo: authorInfo.photoURL,
+        },
+        recipe: {
+          name: mostRecentRecipe.name,
+          description: mostRecentRecipe.description,
+          photo: mostRecentRecipe.photo,
+          tags: mostRecentRecipe.tags,
+          creationTime: mostRecentRecipe.createdAt.toString(),
+        },
+        likesCount,
+        commentsCount,
+        userLiked: userLiked,
+      });
+    }
     for (const user of followedUsers) {
       const recipes = await this.recipeRepository.findRecipe({
         authorId: user.followingId,
@@ -144,7 +182,7 @@ export class RecipeService {
       }
     }
 
-    if (allRecipes.length === 0) {
+    if (allRecipes.length <= 10) {
       const randomRecipes = await this.recipeRepository.findRandomRecipes(
         10,
         recipesForUserDTO.uuid,
@@ -322,7 +360,7 @@ export class RecipeService {
     return await this.recipeRepository.update(id, updateRecipeDto);
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     return await this.recipeRepository.remove(id);
   }
 }

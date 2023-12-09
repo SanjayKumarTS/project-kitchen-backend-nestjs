@@ -61,6 +61,7 @@ export class RecipeRepository {
 
     const recipes = await this.recipeModel
       .find(query)
+      .sort({ createdAt: -1 })
       .skip(skip)
       .limit(totalResultsPerPage)
       .exec();
@@ -73,11 +74,15 @@ export class RecipeRepository {
     };
   }
 
+  async findMostRecentRecipe(): Promise<Recipe> {
+    return this.recipeModel.findOne().sort({ createdAt: -1 }).exec();
+  }
+
   async update(id: number, updateRecipeDto: UpdateRecipeDto) {
     return await this.recipeModel.findByIdAndUpdate(id);
   }
 
-  async remove(id: number) {
-    return await this.recipeModel.findByIdAndDelete(id);
+  async remove(id: string) {
+    return await this.recipeModel.deleteOne({ uuid: id });
   }
 }
